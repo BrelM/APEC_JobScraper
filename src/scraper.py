@@ -55,21 +55,19 @@ def scrape_jobs() -> list:
 
 	wait = WebDriverWait(driver, 20)
 
-	# 1) Accept cookie banner / OneTrust if present (example tries common selectors)
+	# 1) Accept cookie banner / OneTrust if present
 	try:
-		# Example: OneTrust accept button is often [id="onetrust-accept-btn-handler"] or similar
 		accept_btn = wait.until(EC.element_to_be_clickable((By.ID, "onetrust-accept-btn-handler")))
 		accept_btn.click()
 	except Exception:
-		# fallback: try to remove the cookie popup by setting the cookie (if needed)
+		# fallback: try to remove the cookie popup by setting the cookie directly
 		pass
 
-	# 2) If the site shows the CGU modal in your uploaded HTML, try to click its 'ACCEPTER' button
+	# 2) If the site shows the CGU modal, try to click its 'ACCEPTER' button
 	try:
 		# Wait for modal button and click
-		# The HTML you uploaded has a modal with a button that calls apecCguPopin.doAccepted()
 		accepter = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(., 'ACCEPTER')]")))
-		# ensure the checkbox is checked first (if required)
+		# Ensure the checkbox is checked first (if required)
 		try:
 			chk = driver.find_element(By.ID, "cguAcceptees")
 			if not chk.is_selected():
@@ -80,10 +78,11 @@ def scrape_jobs() -> list:
 	except Exception:
 		# modal not present or already accepted
 		pass
+
+
 	'''
 	# 3) Wait for the Angular component to render. Inspect the DOM element that contains offers:
 	try:
-		# adjust selector to the actual list container the Angular app uses
 		offers_container = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "container-result")) )
 		# give Angular a moment to finish rendering
 		time.sleep(5)
