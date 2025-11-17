@@ -153,7 +153,7 @@ def scrape_jobs() -> list:
 			"Description": description.get_text(strip=True) if description else None,
 			"Salary": salary if salary else None,
 			"Contract": contract if contract else None,
-			"Publication date": datetime.strptime(pub_date, "%d/%m/%Y").date() if pub_date else None,
+			"Publication date": pub_date if pub_date else None,
 			"pub_date": datetime.strptime(pub_date, "%d/%m/%Y") if pub_date else None,
 			"Link": ROOT + str(link) if link else ROOT
 		}
